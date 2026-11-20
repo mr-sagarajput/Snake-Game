@@ -41,7 +41,7 @@
       align-items: center;
       justify-content: center;
       min-height: 100vh;
-      padding: 1rem;
+      padding: 0.5rem;
       outline: none;
     }
 
@@ -49,7 +49,7 @@
       background: var(--phone-case);
       border: 3px solid var(--phone-border);
       border-radius: 36px;
-      padding: 1.5rem 1.25rem 1.25rem 1.25rem;
+      padding: 1.25rem 1rem 1rem 1rem;
       box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7), 0 0 20px rgba(0, 0, 0, 0.5);
       display: flex;
       flex-direction: column;
@@ -63,7 +63,7 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 0 0.5rem 0.75rem 0.5rem;
+      padding: 0 0.5rem 0.5rem 0.5rem;
     }
 
     .speaker {
@@ -91,7 +91,7 @@
       background: var(--screen-bezel);
       border: 5px solid #2b394d;
       border-radius: 16px;
-      padding: 0.6rem;
+      padding: 0.5rem;
       box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.4);
       width: 100%;
       display: flex;
@@ -102,7 +102,7 @@
     .lcd-screen {
       position: relative;
       width: 320px;
-      height: 200px;
+      height: 204px;
       background: var(--screen-lcd);
       border: 1px solid #6b7b52;
       border-radius: 4px;
@@ -112,6 +112,20 @@
       display: flex;
       flex-direction: column;
       font-family: 'Courier New', Courier, monospace;
+      color: var(--pixel-black);
+    }
+
+    .lcd-view {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      background: var(--screen-lcd);
+      z-index: 5;
+    }
+
+    .lcd-view.hidden {
+      display: none !important;
     }
 
     .lcd-bar {
@@ -146,11 +160,120 @@
       to { opacity: 1; }
     }
 
+    /* Menu Styling */
+    .menu-title {
+      font-size: 0.85rem;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      text-align: center;
+      padding: 0.3rem 0;
+      border-bottom: 1px dashed rgba(20, 32, 18, 0.4);
+      background: rgba(139, 156, 109, 0.4);
+    }
+
+    .menu-list {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      padding: 0.35rem 0.6rem;
+      gap: 0.2rem;
+      overflow-y: auto;
+    }
+
+    .menu-item {
+      padding: 0.28rem 0.5rem;
+      font-size: 0.75rem;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-radius: 2px;
+      cursor: pointer;
+      border: 1px solid transparent;
+    }
+
+    .menu-item:hover, .menu-item.active {
+      background: var(--pixel-black);
+      color: var(--screen-lcd);
+    }
+
+    .menu-footer {
+      height: 20px;
+      font-size: 0.65rem;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 0.5rem;
+      border-top: 1px solid #738257;
+      background: var(--lcd-header);
+    }
+
+    /* Sub-pages (Settings, Highscore, etc.) */
+    .subpage-body {
+      flex: 1;
+      padding: 0.5rem 0.75rem;
+      font-size: 0.75rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+      overflow-y: auto;
+    }
+
+    .setting-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px dotted rgba(20, 32, 18, 0.3);
+      padding-bottom: 0.25rem;
+    }
+
+    .toggle-val {
+      font-weight: 900;
+      padding: 0.1rem 0.4rem;
+      background: rgba(20, 32, 18, 0.15);
+      border-radius: 2px;
+      cursor: pointer;
+    }
+
+    .toggle-val:hover {
+      background: var(--pixel-black);
+      color: var(--screen-lcd);
+    }
+
+    /* Standby screen */
+    .standby-screen {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 0.5rem;
+    }
+
+    .standby-top {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.7rem;
+      font-weight: 900;
+    }
+
+    .standby-center {
+      text-align: center;
+      margin: auto 0;
+    }
+
+    .standby-clock {
+      font-size: 1.6rem;
+      font-weight: 900;
+      letter-spacing: 2px;
+    }
+
     .canvas-area {
       position: relative;
       flex: 1;
       width: 100%;
-      height: 178px;
+      height: 182px;
     }
 
     canvas {
@@ -162,14 +285,14 @@
     .lcd-overlay {
       position: absolute;
       inset: 0;
-      background: rgba(151, 168, 120, 0.92);
+      background: rgba(151, 168, 120, 0.94);
       color: var(--pixel-black);
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       text-align: center;
-      padding: 1rem;
+      padding: 0.8rem;
       z-index: 10;
     }
 
@@ -187,7 +310,7 @@
     .lcd-overlay p {
       font-size: 0.75rem;
       font-weight: bold;
-      margin-bottom: 0.75rem;
+      margin-bottom: 0.6rem;
     }
 
     .btn-nokia {
@@ -213,41 +336,30 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-top: 1rem;
+      margin-top: 0.75rem;
       padding: 0 0.5rem;
     }
 
-    .options {
+    .softkeys {
       display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      font-size: 0.75rem;
-      color: #94a3b8;
-    }
-
-    select {
-      background: #243144;
-      color: #e2e8f0;
-      border: 1px solid #3b4d66;
-      border-radius: 4px;
-      padding: 0.2rem 0.4rem;
-      font-size: 0.75rem;
-      outline: none;
+      gap: 0.4rem;
     }
 
     .btn-phone {
       background: #243144;
       color: #e2e8f0;
       border: 1px solid #3b4d66;
-      border-radius: 4px;
-      padding: 0.25rem 0.6rem;
+      border-radius: 6px;
+      padding: 0.35rem 0.65rem;
       font-size: 0.75rem;
       cursor: pointer;
       font-weight: bold;
+      box-shadow: 0 2px 3px rgba(0,0,0,0.4);
     }
 
     .btn-phone:active {
       background: #334155;
+      transform: translateY(1px);
     }
 
     .btn-install {
@@ -269,7 +381,7 @@
     }
 
     .key-btn {
-      width: 30px;
+      width: 32px;
       height: 30px;
       background: #243144;
       border: 1px solid #3b4d66;
@@ -301,7 +413,7 @@
     }
 
     .footer-help {
-      margin-top: 1rem;
+      margin-top: 0.75rem;
       font-size: 0.75rem;
       color: #64748b;
       text-align: center;
@@ -326,49 +438,153 @@
     <div class="screen-bezel">
       <div id="lcdScreen" class="lcd-screen">
         
-        <!-- LCD Header -->
-        <div class="lcd-bar">
-          <div>SCR: <span id="scoreEl">0</span></div>
-          <div id="invincibleStatus" class="invincible-badge hidden">
-            ★ INVINCIBLE: <span id="invTimerEl">10.0</span>s
+        <!-- 1. MAIN MENU SCREEN (Initial view on app launch) -->
+        <div id="viewMenu" class="lcd-view">
+          <div class="menu-title">-- SNAKE II MENU --</div>
+          <div class="menu-list">
+            <div id="menuResume" class="menu-item hidden" data-action="resume">
+              <span>1. RESUME GAME</span>
+              <span>▶</span>
+            </div>
+            <div class="menu-item active" data-action="new-game">
+              <span id="labelNewGame">1. START GAME</span>
+              <span>▶</span>
+            </div>
+            <div class="menu-item" data-action="settings">
+              <span>2. SETTINGS</span>
+              <span>⚙</span>
+            </div>
+            <div class="menu-item" data-action="highscore">
+              <span>3. TOP SCORE</span>
+              <span>★</span>
+            </div>
+            <div class="menu-item" data-action="instructions">
+              <span>4. HOW TO PLAY</span>
+              <span>?</span>
+            </div>
+            <div class="menu-item" data-action="exit">
+              <span>5. EXIT GAME</span>
+              <span>✕</span>
+            </div>
           </div>
-          <div>HI: <span id="highScoreEl">0</span></div>
+          <div class="menu-footer">
+            <span>[SELECT]</span>
+            <span>NOKIA 3310</span>
+            <span>[EXIT]</span>
+          </div>
         </div>
 
-        <!-- Canvas -->
-        <div class="canvas-area">
-          <canvas id="gameCanvas" width="320" height="178"></canvas>
+        <!-- 2. SETTINGS SCREEN -->
+        <div id="viewSettings" class="lcd-view hidden">
+          <div class="menu-title">-- SETTINGS --</div>
+          <div class="subpage-body">
+            <div class="setting-row">
+              <span>SPEED / LEVEL:</span>
+              <span id="settingSpeed" class="toggle-val">2 (NORM)</span>
+            </div>
+            <div class="setting-row">
+              <span>SOUND FX:</span>
+              <span id="settingSound" class="toggle-val">ON</span>
+            </div>
+            <div class="setting-row">
+              <span>WALL MODE:</span>
+              <span id="settingWalls" class="toggle-val">WRAP 🌀</span>
+            </div>
+            <div style="font-size: 0.65rem; color: #3b4e28; margin-top: 0.2rem;">
+              * Tap any setting to cycle through options.
+            </div>
+          </div>
+          <div class="menu-footer">
+            <span id="btnBackSettings" style="cursor: pointer;">◀ [BACK TO MENU]</span>
+          </div>
+        </div>
 
-          <div id="startOverlay" class="lcd-overlay">
-            <h2>SNAKE II</h2>
-            <p>Pass-Through Walls 🌀</p>
-            <p style="font-size: 0.65rem; font-weight: normal; margin-bottom: 0.75rem;">
-              Catch flashing Golden Stars for 10s of Invincibility!
-            </p>
-            <button id="playBtn" class="btn-nokia">[ PRESS START ]</button>
+        <!-- 3. TOP SCORE SCREEN -->
+        <div id="viewHighscore" class="lcd-view hidden">
+          <div class="menu-title">-- HIGH SCORE --</div>
+          <div class="subpage-body" style="text-align: center; justify-content: center; gap: 0.6rem;">
+            <div style="font-size: 0.8rem; font-weight: bold;">ALL-TIME BEST</div>
+            <div id="highScoreDisplay" style="font-size: 1.8rem; font-weight: 900; letter-spacing: 2px;">0</div>
+            <div>
+              <button id="btnResetScore" class="btn-nokia" style="padding: 0.2rem 0.5rem; font-size: 0.65rem;">RESET SCORE</button>
+            </div>
+          </div>
+          <div class="menu-footer">
+            <span id="btnBackHighscore" style="cursor: pointer;">◀ [BACK TO MENU]</span>
+          </div>
+        </div>
+
+        <!-- 4. HOW TO PLAY SCREEN -->
+        <div id="viewInstructions" class="lcd-view hidden">
+          <div class="menu-title">-- INSTRUCTIONS --</div>
+          <div class="subpage-body" style="font-size: 0.65rem; line-height: 1.3;">
+            <p>• <b>MOVE</b>: Keys 2 (Up), 8 (Down), 4 (Left), 6 (Right) or Arrow / WASD.</p>
+            <p>• <b>EAT BUGS</b>: Standard bugs give +10 points.</p>
+            <p>• <b>SPECIAL STAR</b>: Golden flashing star gives +50 pts and <b>10s Invincibility</b>!</p>
+            <p>• <b>WALLS</b>: Walk through top/bottom or left/right borders freely.</p>
+            <p>• <b>MENU</b>: Press Pause / Menu softkey anytime to pause & return to menu.</p>
+          </div>
+          <div class="menu-footer">
+            <span id="btnBackInstructions" style="cursor: pointer;">◀ [BACK TO MENU]</span>
+          </div>
+        </div>
+
+        <!-- 5. NOKIA STANDBY / EXIT SCREEN -->
+        <div id="viewStandby" class="lcd-view hidden">
+          <div class="standby-screen">
+            <div class="standby-top">
+              <span>▲▲▲▲ (4G)</span>
+              <span>NOKIA</span>
+              <span>[■■■■]</span>
+            </div>
+            <div class="standby-center">
+              <div id="standbyClock" class="standby-clock">12:00</div>
+              <div style="font-size: 0.75rem; font-weight: bold; margin-top: 0.2rem;">PHONE LOCKED</div>
+              <div style="font-size: 0.65rem; margin-top: 0.4rem; color: #3b4e28;">Tap [MENU] to resume Snake</div>
+            </div>
+            <div class="menu-footer">
+              <span id="btnStandbyUnlock" style="cursor: pointer; font-weight: 900;">[MENU]</span>
+              <span>STANDBY</span>
+              <span id="btnStandbyExitApp" style="cursor: pointer;">[CLOSE]</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 6. ACTIVE GAMEPLAY ARENA -->
+        <div id="viewGameplay" class="lcd-view hidden">
+          <!-- Game HUD -->
+          <div class="lcd-bar">
+            <div>SCR: <span id="scoreEl">0</span></div>
+            <div id="invincibleStatus" class="invincible-badge hidden">
+              ★ INVINCIBLE: <span id="invTimerEl">10.0</span>s
+            </div>
+            <div>HI: <span id="highScoreEl">0</span></div>
           </div>
 
-          <div id="gameOverOverlay" class="lcd-overlay hidden">
-            <h2>GAME OVER</h2>
-            <p id="finalScoreEl">SCORE: 0</p>
-            <button id="retryBtn" class="btn-nokia">[ PLAY AGAIN ]</button>
+          <!-- Canvas -->
+          <div class="canvas-area">
+            <canvas id="gameCanvas" width="320" height="182"></canvas>
+
+            <!-- Game Over Overlay -->
+            <div id="gameOverOverlay" class="lcd-overlay hidden">
+              <h2>GAME OVER</h2>
+              <p id="finalScoreEl">SCORE: 0</p>
+              <div style="display: flex; gap: 0.5rem;">
+                <button id="retryBtn" class="btn-nokia">[ PLAY AGAIN ]</button>
+                <button id="btnGameOverMenu" class="btn-nokia" style="background: transparent; color: var(--pixel-black); border: 1.5px solid var(--pixel-black);">[ MENU ]</button>
+              </div>
+            </div>
           </div>
         </div>
 
       </div>
     </div>
 
-    <!-- Keypad Controls (Classic 2, 4, 6, 8 Nokia snake keys) -->
+    <!-- Softkeys & Directional Keypad -->
     <div class="controls-row">
-      <div class="options">
-        <label for="speedSelect">SPD:</label>
-        <select id="speedSelect">
-          <option value="115">1 (Slow)</option>
-          <option value="85" selected>2 (Norm)</option>
-          <option value="60">3 (Fast)</option>
-          <option value="42">4 (Max)</option>
-        </select>
-        <button id="pauseBtn" class="btn-phone">Pause</button>
+      <div class="softkeys">
+        <button id="btnSoftMenu" class="btn-phone">Menu</button>
+        <button id="btnSoftPause" class="btn-phone">Pause</button>
       </div>
 
       <div class="keypad">
@@ -394,13 +610,13 @@
     </div>
 
     <div class="footer-help">
-      Use Keys 2, 4, 6, 8 or Arrow Keys / WASD. Spacebar pauses.
+      Press <b>Menu</b> to return to options. Use 2, 4, 6, 8 or Arrows to move.
     </div>
 
   </div>
 
   <script>
-    // PWA Service Worker Registration & WebAPK Install Prompt
+    // PWA Service Worker Registration
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
         navigator.serviceWorker.register('./sw.js').catch(err => {
@@ -411,29 +627,21 @@
 
     let deferredPrompt;
     const installBtn = document.getElementById('installBtn');
-
     window.addEventListener('beforeinstallprompt', (e) => {
       e.preventDefault();
       deferredPrompt = e;
       installBtn.style.display = 'inline-block';
     });
-
     installBtn.addEventListener('click', async () => {
       if (deferredPrompt) {
         deferredPrompt.prompt();
         const { outcome } = await deferredPrompt.userChoice;
-        if (outcome === 'accepted') {
-          installBtn.style.display = 'none';
-        }
+        if (outcome === 'accepted') installBtn.style.display = 'none';
         deferredPrompt = null;
       }
     });
 
-    window.addEventListener('appinstalled', () => {
-      installBtn.style.display = 'none';
-    });
-
-    // Authentic Nokia Buzzer Chiptune Synthesizer
+    // Audio Engine
     const AudioEngine = {
       ctx: null,
       muted: false,
@@ -468,9 +676,8 @@
           osc.stop(this.ctx.currentTime + duration);
         } catch(e) {}
       },
-      playEatBug() {
-        this.beep(988, 0.04, 'square', 0.09);
-      },
+      playEatBug() { this.beep(988, 0.04, 'square', 0.09); },
+      playMenuClick() { this.beep(750, 0.02, 'square', 0.05); },
       playEatSpecial() {
         if (this.muted) return;
         const notes = [659, 587, 370, 415, 554, 494, 659, 880];
@@ -490,13 +697,23 @@
       }
     };
 
+    // State & Screens
+    let currentView = 'menu'; // 'menu', 'gameplay', 'settings', 'highscore', 'instructions', 'standby'
+    let hasActiveGame = false;
+    let gameState = 'ready'; // 'ready', 'running', 'paused', 'gameover'
+
+    // Game Config
+    let configSpeed = 85; // 115, 85, 60, 42
+    let configWallWrap = true; // true = Wrap 🌀, false = Solid 🧱
+
+    // Game Canvas & Variables
     const canvas = document.getElementById('gameCanvas');
     const ctx = canvas.getContext('2d');
     const COLS = 26;
     const ROWS = 15;
     const CELL_SIZE = 12;
     const OFFSET_X = 4;
-    const OFFSET_Y = -1;
+    const OFFSET_Y = 1;
 
     let snake = [];
     let dir = { x: 1, y: 0 };
@@ -514,27 +731,225 @@
       if (isNaN(highScore)) highScore = 0;
     } catch(e) {}
 
-    let gameState = 'ready';
     let lastTickTime = 0;
     let lastTime = 0;
-    let tickInterval = 85;
     let tongueTimer = 0;
 
+    // View Elements
+    const viewMenu = document.getElementById('viewMenu');
+    const viewGameplay = document.getElementById('viewGameplay');
+    const viewSettings = document.getElementById('viewSettings');
+    const viewHighscore = document.getElementById('viewHighscore');
+    const viewInstructions = document.getElementById('viewInstructions');
+    const viewStandby = document.getElementById('viewStandby');
+
+    const menuResume = document.getElementById('menuResume');
+    const labelNewGame = document.getElementById('labelNewGame');
+    const gameOverOverlay = document.getElementById('gameOverOverlay');
     const scoreEl = document.getElementById('scoreEl');
     const highScoreEl = document.getElementById('highScoreEl');
     const finalScoreEl = document.getElementById('finalScoreEl');
-    const startOverlay = document.getElementById('startOverlay');
-    const gameOverOverlay = document.getElementById('gameOverOverlay');
-    const pauseBtn = document.getElementById('pauseBtn');
-    const playBtn = document.getElementById('playBtn');
-    const retryBtn = document.getElementById('retryBtn');
-    const soundBtn = document.getElementById('soundBtn');
-    const speedSelect = document.getElementById('speedSelect');
-    const lcdScreen = document.getElementById('lcdScreen');
+    const highScoreDisplay = document.getElementById('highScoreDisplay');
     const invincibleStatus = document.getElementById('invincibleStatus');
     const invTimerEl = document.getElementById('invTimerEl');
+    const standbyClock = document.getElementById('standbyClock');
+
+    const settingSpeed = document.getElementById('settingSpeed');
+    const settingSound = document.getElementById('settingSound');
+    const settingWalls = document.getElementById('settingWalls');
+
+    const soundBtn = document.getElementById('soundBtn');
+    const btnSoftMenu = document.getElementById('btnSoftMenu');
+    const btnSoftPause = document.getElementById('btnSoftPause');
 
     highScoreEl.textContent = highScore;
+    highScoreDisplay.textContent = highScore;
+
+    function showView(viewName) {
+      AudioEngine.playMenuClick();
+      currentView = viewName;
+      
+      viewMenu.classList.add('hidden');
+      viewGameplay.classList.add('hidden');
+      viewSettings.classList.add('hidden');
+      viewHighscore.classList.add('hidden');
+      viewInstructions.classList.add('hidden');
+      viewStandby.classList.add('hidden');
+
+      if (viewName === 'menu') {
+        viewMenu.classList.remove('hidden');
+        if (hasActiveGame && gameState !== 'gameover') {
+          menuResume.classList.remove('hidden');
+          labelNewGame.textContent = '2. NEW GAME';
+        } else {
+          menuResume.classList.add('hidden');
+          labelNewGame.textContent = '1. START GAME';
+        }
+      } else if (viewName === 'gameplay') {
+        viewGameplay.classList.remove('hidden');
+      } else if (viewName === 'settings') {
+        viewSettings.classList.remove('hidden');
+      } else if (viewName === 'highscore') {
+        viewHighscore.classList.remove('hidden');
+        highScoreDisplay.textContent = highScore;
+      } else if (viewName === 'instructions') {
+        viewInstructions.classList.remove('hidden');
+      } else if (viewName === 'standby') {
+        viewStandby.classList.remove('hidden');
+        updateStandbyClock();
+      }
+    }
+
+    function updateStandbyClock() {
+      const now = new Date();
+      const h = String(now.getHours()).padStart(2, '0');
+      const m = String(now.getMinutes()).padStart(2, '0');
+      standbyClock.textContent = `${h}:${m}`;
+    }
+    setInterval(updateStandbyClock, 1000);
+
+    // Menu Navigation Click Handlers
+    document.querySelectorAll('.menu-item').forEach(item => {
+      item.addEventListener('click', (e) => {
+        const action = item.getAttribute('data-action');
+        if (action === 'resume') {
+          resumeGame();
+        } else if (action === 'new-game') {
+          startNewGame();
+        } else if (action === 'settings') {
+          showView('settings');
+        } else if (action === 'highscore') {
+          showView('highscore');
+        } else if (action === 'instructions') {
+          showView('instructions');
+        } else if (action === 'exit') {
+          exitApp();
+        }
+      });
+    });
+
+    document.getElementById('btnBackSettings').addEventListener('click', () => showView('menu'));
+    document.getElementById('btnBackHighscore').addEventListener('click', () => showView('menu'));
+    document.getElementById('btnBackInstructions').addEventListener('click', () => showView('menu'));
+    document.getElementById('btnStandbyUnlock').addEventListener('click', () => showView('menu'));
+    document.getElementById('btnGameOverMenu').addEventListener('click', () => showView('menu'));
+    document.getElementById('retryBtn').addEventListener('click', () => startNewGame());
+
+    document.getElementById('btnStandbyExitApp').addEventListener('click', () => {
+      try { window.close(); } catch(e) {}
+    });
+
+    // Settings Toggles
+    const speedOptions = [
+      { label: '1 (SLOW)', val: 115 },
+      { label: '2 (NORM)', val: 85 },
+      { label: '3 (FAST)', val: 60 },
+      { label: '4 (MAX)', val: 42 }
+    ];
+    let speedIdx = 1;
+
+    settingSpeed.addEventListener('click', () => {
+      speedIdx = (speedIdx + 1) % speedOptions.length;
+      configSpeed = speedOptions[speedIdx].val;
+      settingSpeed.textContent = speedOptions[speedIdx].label;
+      AudioEngine.playMenuClick();
+    });
+
+    settingSound.addEventListener('click', () => {
+      AudioEngine.muted = !AudioEngine.muted;
+      settingSound.textContent = AudioEngine.muted ? 'OFF' : 'ON';
+      soundBtn.textContent = AudioEngine.muted ? '🔇 Muted' : '🔊 Sound';
+      AudioEngine.playMenuClick();
+    });
+
+    settingWalls.addEventListener('click', () => {
+      configWallWrap = !configWallWrap;
+      settingWalls.textContent = configWallWrap ? 'WRAP 🌀' : 'SOLID 🧱';
+      AudioEngine.playMenuClick();
+    });
+
+    document.getElementById('btnResetScore').addEventListener('click', () => {
+      highScore = 0;
+      highScoreEl.textContent = '0';
+      highScoreDisplay.textContent = '0';
+      try { localStorage.removeItem('nokia_snake_highscore'); } catch(e) {}
+      AudioEngine.playMenuClick();
+    });
+
+    // Sound toggle from phone header
+    soundBtn.addEventListener('click', () => {
+      AudioEngine.muted = !AudioEngine.muted;
+      soundBtn.textContent = AudioEngine.muted ? '🔇 Muted' : '🔊 Sound';
+      settingSound.textContent = AudioEngine.muted ? 'OFF' : 'ON';
+    });
+
+    // Exit Application Logic
+    function exitApp() {
+      // First try standard window.close()
+      let closed = false;
+      try {
+        window.close();
+        // If window didn't close, show Nokia Standby phone lock screen
+        setTimeout(() => {
+          showView('standby');
+        }, 150);
+      } catch(e) {
+        showView('standby');
+      }
+    }
+
+    // Softkeys: Menu & Pause
+    btnSoftMenu.addEventListener('click', () => {
+      if (currentView === 'gameplay') {
+        pauseGame();
+        showView('menu');
+      } else {
+        showView('menu');
+      }
+    });
+
+    btnSoftPause.addEventListener('click', () => {
+      if (currentView === 'gameplay') {
+        togglePause();
+      }
+    });
+
+    function startNewGame() {
+      window.focus();
+      AudioEngine.init();
+      resetGame();
+      hasActiveGame = true;
+      gameState = 'running';
+      gameOverOverlay.classList.add('hidden');
+      btnSoftPause.textContent = 'Pause';
+      showView('gameplay');
+    }
+
+    function resumeGame() {
+      window.focus();
+      AudioEngine.init();
+      gameState = 'running';
+      btnSoftPause.textContent = 'Pause';
+      lastTickTime = 0;
+      showView('gameplay');
+    }
+
+    function pauseGame() {
+      if (gameState === 'running') {
+        gameState = 'paused';
+        btnSoftPause.textContent = 'Resume';
+      }
+    }
+
+    function togglePause() {
+      if (gameState === 'running') {
+        pauseGame();
+      } else if (gameState === 'paused') {
+        gameState = 'running';
+        btnSoftPause.textContent = 'Pause';
+        lastTickTime = 0;
+      }
+    }
 
     function resetGame() {
       snake = [
@@ -555,7 +970,6 @@
       invincibleStatus.classList.add('hidden');
       lastTickTime = 0;
       spawnFood();
-      tickInterval = parseInt(speedSelect.value, 10) || 85;
     }
 
     function spawnFood() {
@@ -611,29 +1025,27 @@
       dir = nextDir;
       let newHead = { x: snake[0].x + dir.x, y: snake[0].y + dir.y };
 
-      // Screen wrapping
+      // Wall Collision or Wrapping
       let wrapped = false;
-      if (newHead.x < 0) {
-        newHead.x = COLS - 1;
-        wrapped = true;
-      } else if (newHead.x >= COLS) {
-        newHead.x = 0;
-        wrapped = true;
+      if (configWallWrap) {
+        if (newHead.x < 0) { newHead.x = COLS - 1; wrapped = true; }
+        else if (newHead.x >= COLS) { newHead.x = 0; wrapped = true; }
+        if (newHead.y < 0) { newHead.y = ROWS - 1; wrapped = true; }
+        else if (newHead.y >= ROWS) { newHead.y = 0; wrapped = true; }
+
+        if (wrapped) {
+          AudioEngine.playWarp();
+          addPixelDust(newHead.x, newHead.y, 4);
+        }
+      } else {
+        // Solid wall mode: crashing into border ends game
+        if (newHead.x < 0 || newHead.x >= COLS || newHead.y < 0 || newHead.y >= ROWS) {
+          gameOver();
+          return;
+        }
       }
 
-      if (newHead.y < 0) {
-        newHead.y = ROWS - 1;
-        wrapped = true;
-      } else if (newHead.y >= ROWS) {
-        newHead.y = 0;
-        wrapped = true;
-      }
-
-      if (wrapped) {
-        AudioEngine.playWarp();
-        addPixelDust(newHead.x, newHead.y, 4);
-      }
-
+      // Self collision (ignored when Invincible!)
       if (!isInvincible && snake.some(segment => segment.x === newHead.x && segment.y === newHead.y)) {
         gameOver();
         return;
@@ -641,6 +1053,7 @@
 
       snake.unshift(newHead);
 
+      // Eat Regular Food
       if (newHead.x === food.x && newHead.y === food.y) {
         score += 10;
         scoreEl.textContent = score;
@@ -653,6 +1066,7 @@
         addPixelDust(food.x, food.y, 8);
         spawnFood();
       } 
+      // Eat Special Food
       else if (specialFood && newHead.x === specialFood.x && newHead.y === specialFood.y) {
         score += 50;
         scoreEl.textContent = score;
@@ -677,96 +1091,68 @@
 
     function gameOver() {
       gameState = 'gameover';
+      hasActiveGame = false;
       AudioEngine.playGameOver();
       finalScoreEl.textContent = `SCORE: ${score}`;
       gameOverOverlay.classList.remove('hidden');
     }
 
     function setDirection(dx, dy) {
-      if (gameState === 'ready' || gameState === 'gameover') {
-        startGame();
-        nextDir = { x: dx, y: dy };
-        return;
-      }
       if (gameState !== 'running') return;
       if (dx !== 0 && dir.x === -dx) return;
       if (dy !== 0 && dir.y === -dy) return;
       nextDir = { x: dx, y: dy };
     }
 
-    function togglePause() {
-      if (gameState === 'ready' || gameState === 'gameover') {
-        startGame();
-        return;
-      }
-      if (gameState === 'running') {
-        gameState = 'paused';
-        pauseBtn.textContent = 'Resume';
-      } else if (gameState === 'paused') {
-        gameState = 'running';
-        lastTickTime = 0;
-        pauseBtn.textContent = 'Pause';
-      }
-    }
-
-    function startGame() {
-      window.focus();
-      AudioEngine.init();
-      resetGame();
-      gameState = 'running';
-      startOverlay.classList.add('hidden');
-      gameOverOverlay.classList.add('hidden');
-      pauseBtn.textContent = 'Pause';
-    }
-
-    playBtn.addEventListener('click', (e) => { e.stopPropagation(); startGame(); });
-    retryBtn.addEventListener('click', (e) => { e.stopPropagation(); startGame(); });
-    pauseBtn.addEventListener('click', (e) => { e.stopPropagation(); togglePause(); });
-
-    lcdScreen.addEventListener('click', () => {
-      window.focus();
-      if (gameState === 'ready' || gameState === 'gameover') startGame();
-    });
-
-    document.body.addEventListener('click', () => window.focus());
-
+    // Keyboard support
     window.addEventListener('keydown', (e) => {
       window.focus();
-      if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', ' ', 'Enter', '2', '4', '6', '8'].includes(e.key)) {
+      if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', ' ', 'Enter', '2', '4', '6', '8', 'Escape'].includes(e.key)) {
         e.preventDefault();
       }
 
-      if (e.key === ' ' || e.code === 'Space' || e.key === 'Enter') {
-        if (gameState === 'ready' || gameState === 'gameover') startGame();
-        else togglePause();
+      if (e.key === 'Escape') {
+        if (currentView === 'gameplay') {
+          pauseGame();
+          showView('menu');
+        } else if (currentView !== 'menu') {
+          showView('menu');
+        }
         return;
       }
 
-      switch (e.key) {
-        case 'ArrowUp':
-        case 'w':
-        case 'W':
-        case '2':
-          setDirection(0, -1);
-          break;
-        case 'ArrowDown':
-        case 's':
-        case 'S':
-        case '8':
-          setDirection(0, 1);
-          break;
-        case 'ArrowLeft':
-        case 'a':
-        case 'A':
-        case '4':
-          setDirection(-1, 0);
-          break;
-        case 'ArrowRight':
-        case 'd':
-        case 'D':
-        case '6':
-          setDirection(1, 0);
-          break;
+      if (e.key === ' ' || e.code === 'Space') {
+        if (currentView === 'gameplay') togglePause();
+        return;
+      }
+
+      if (currentView === 'gameplay') {
+        switch (e.key) {
+          case 'ArrowUp':
+          case 'w':
+          case 'W':
+          case '2':
+            setDirection(0, -1);
+            break;
+          case 'ArrowDown':
+          case 's':
+          case 'S':
+          case '8':
+            setDirection(0, 1);
+            break;
+          case 'ArrowLeft':
+          case 'a':
+          case 'A':
+          case '4':
+            setDirection(-1, 0);
+            break;
+          case 'ArrowRight':
+          case 'd':
+          case 'D':
+          case '6':
+            setDirection(1, 0);
+            break;
+        }
       }
     });
 
@@ -780,16 +1166,6 @@
         if (d === 'left') setDirection(-1, 0);
         if (d === 'right') setDirection(1, 0);
       });
-    });
-
-    soundBtn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      AudioEngine.muted = !AudioEngine.muted;
-      soundBtn.textContent = AudioEngine.muted ? '🔇 Muted' : '🔊 Sound';
-    });
-
-    speedSelect.addEventListener('change', () => {
-      tickInterval = parseInt(speedSelect.value, 10) || 85;
     });
 
     const PIXEL_BLACK = '#142012';
@@ -960,10 +1336,15 @@
         ctx.fillRect(0, y, canvas.width, 1);
       }
 
-      ctx.strokeStyle = 'rgba(20, 32, 18, 0.35)';
-      ctx.lineWidth = 1;
-      ctx.setLineDash([3, 3]);
-      ctx.strokeRect(OFFSET_X, OFFSET_Y + 1, COLS * CELL_SIZE, ROWS * CELL_SIZE);
+      // Border style based on wrap mode
+      ctx.strokeStyle = 'rgba(20, 32, 18, 0.4)';
+      ctx.lineWidth = configWallWrap ? 1 : 2;
+      if (configWallWrap) {
+        ctx.setLineDash([3, 3]);
+      } else {
+        ctx.setLineDash([]);
+      }
+      ctx.strokeRect(OFFSET_X, OFFSET_Y, COLS * CELL_SIZE, ROWS * CELL_SIZE);
       ctx.setLineDash([]);
 
       if (food) {
@@ -996,7 +1377,7 @@
         const dt = (timestamp - lastTime) / 1000;
         lastTime = timestamp;
 
-        if (gameState === 'running') {
+        if (currentView === 'gameplay' && gameState === 'running') {
           if (isInvincible) {
             invincibilityRemaining -= dt;
             if (invincibilityRemaining <= 0) {
@@ -1022,20 +1403,23 @@
           }
 
           if (!lastTickTime) lastTickTime = timestamp;
-          if (timestamp - lastTickTime >= tickInterval) {
+          if (timestamp - lastTickTime >= configSpeed) {
             step();
             lastTickTime = timestamp;
           }
         }
 
-        draw(timestamp);
+        if (currentView === 'gameplay') {
+          draw(timestamp);
+        }
       } catch(e) {
         console.error("Game Loop Error:", e);
       }
       requestAnimationFrame(loop);
     }
 
-    resetGame();
+    // Start on Menu
+    showView('menu');
     requestAnimationFrame(loop);
   </script>
 </body>
