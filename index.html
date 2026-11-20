@@ -1,0 +1,1042 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#1a2332">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>Nokia 3310 Snake II - Retro Edition</title>
+  
+  <!-- PWA Manifest & App Icons -->
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="icon-192.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+
+  <style>
+    :root {
+      --phone-case: #1a2332;
+      --phone-border: #0f1722;
+      --screen-bezel: #7f8f65;
+      --screen-lcd: #97a878;
+      --pixel-black: #142012;
+      --lcd-header: #8b9c6d;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+      -webkit-user-select: none;
+      touch-action: manipulation;
+    }
+
+    body {
+      background-color: #0b0f19;
+      color: #e2e8f0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 1rem;
+      outline: none;
+    }
+
+    .phone-container {
+      background: var(--phone-case);
+      border: 3px solid var(--phone-border);
+      border-radius: 36px;
+      padding: 1.5rem 1.25rem 1.25rem 1.25rem;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7), 0 0 20px rgba(0, 0, 0, 0.5);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+      max-width: 380px;
+    }
+
+    .phone-header {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 0.5rem 0.75rem 0.5rem;
+    }
+
+    .speaker {
+      width: 40px;
+      height: 4px;
+      background: var(--phone-border);
+      border-radius: 4px;
+    }
+
+    .brand {
+      font-family: monospace;
+      font-weight: 900;
+      font-size: 0.95rem;
+      letter-spacing: 3px;
+      color: #cbd5e1;
+    }
+
+    .header-btns {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .screen-bezel {
+      background: var(--screen-bezel);
+      border: 5px solid #2b394d;
+      border-radius: 16px;
+      padding: 0.6rem;
+      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.4);
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .lcd-screen {
+      position: relative;
+      width: 320px;
+      height: 200px;
+      background: var(--screen-lcd);
+      border: 1px solid #6b7b52;
+      border-radius: 4px;
+      overflow: hidden;
+      box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.3);
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      font-family: 'Courier New', Courier, monospace;
+    }
+
+    .lcd-bar {
+      height: 22px;
+      background: var(--lcd-header);
+      border-bottom: 1px solid #738257;
+      padding: 0 0.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.75rem;
+      font-weight: bold;
+      color: var(--pixel-black);
+    }
+
+    .invincible-badge {
+      font-size: 0.65rem;
+      background: var(--pixel-black);
+      color: var(--screen-lcd);
+      padding: 0 0.3rem;
+      border-radius: 3px;
+      font-weight: 900;
+      animation: pulse 1s infinite alternate;
+    }
+
+    .invincible-badge.hidden {
+      display: none;
+    }
+
+    @keyframes pulse {
+      from { opacity: 0.8; }
+      to { opacity: 1; }
+    }
+
+    .canvas-area {
+      position: relative;
+      flex: 1;
+      width: 100%;
+      height: 178px;
+    }
+
+    canvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+
+    .lcd-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(151, 168, 120, 0.92);
+      color: var(--pixel-black);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 1rem;
+      z-index: 10;
+    }
+
+    .lcd-overlay.hidden {
+      display: none;
+    }
+
+    .lcd-overlay h2 {
+      font-size: 1.1rem;
+      font-weight: 900;
+      letter-spacing: 1.5px;
+      margin-bottom: 0.2rem;
+    }
+
+    .lcd-overlay p {
+      font-size: 0.75rem;
+      font-weight: bold;
+      margin-bottom: 0.75rem;
+    }
+
+    .btn-nokia {
+      background: var(--pixel-black);
+      color: var(--screen-lcd);
+      border: none;
+      padding: 0.35rem 0.9rem;
+      border-radius: 4px;
+      font-family: inherit;
+      font-weight: bold;
+      font-size: 0.75rem;
+      cursor: pointer;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+      transition: transform 0.1s;
+    }
+
+    .btn-nokia:active {
+      transform: scale(0.95);
+    }
+
+    .controls-row {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 1rem;
+      padding: 0 0.5rem;
+    }
+
+    .options {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.75rem;
+      color: #94a3b8;
+    }
+
+    select {
+      background: #243144;
+      color: #e2e8f0;
+      border: 1px solid #3b4d66;
+      border-radius: 4px;
+      padding: 0.2rem 0.4rem;
+      font-size: 0.75rem;
+      outline: none;
+    }
+
+    .btn-phone {
+      background: #243144;
+      color: #e2e8f0;
+      border: 1px solid #3b4d66;
+      border-radius: 4px;
+      padding: 0.25rem 0.6rem;
+      font-size: 0.75rem;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .btn-phone:active {
+      background: #334155;
+    }
+
+    .btn-install {
+      background: #059669;
+      color: #ffffff;
+      border: 1px solid #10b981;
+    }
+
+    .keypad {
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+
+    .keypad-col {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    .key-btn {
+      width: 30px;
+      height: 30px;
+      background: #243144;
+      border: 1px solid #3b4d66;
+      border-radius: 6px;
+      color: #e2e8f0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 2px 3px rgba(0,0,0,0.4);
+    }
+
+    .key-btn:active {
+      transform: translateY(1px);
+      background: #334155;
+    }
+
+    .key-num {
+      font-size: 0.65rem;
+      font-weight: bold;
+      line-height: 1;
+    }
+
+    .key-arrow {
+      font-size: 0.55rem;
+      color: #94a3b8;
+      line-height: 1;
+    }
+
+    .footer-help {
+      margin-top: 1rem;
+      font-size: 0.75rem;
+      color: #64748b;
+      text-align: center;
+    }
+  </style>
+</head>
+<body tabindex="0">
+
+  <div class="phone-container">
+    
+    <!-- Top Bezel: Speaker & Nokia Logo -->
+    <div class="phone-header">
+      <div class="speaker"></div>
+      <div class="brand">NOKIA</div>
+      <div class="header-btns">
+        <button id="installBtn" class="btn-phone btn-install" style="display: none; padding: 0.2rem 0.4rem; font-size: 0.7rem;">📲 Install App</button>
+        <button id="soundBtn" class="btn-phone" style="padding: 0.2rem 0.4rem; font-size: 0.7rem;">🔊 Sound</button>
+      </div>
+    </div>
+
+    <!-- Green Graphic LCD Display -->
+    <div class="screen-bezel">
+      <div id="lcdScreen" class="lcd-screen">
+        
+        <!-- LCD Header -->
+        <div class="lcd-bar">
+          <div>SCR: <span id="scoreEl">0</span></div>
+          <div id="invincibleStatus" class="invincible-badge hidden">
+            ★ INVINCIBLE: <span id="invTimerEl">10.0</span>s
+          </div>
+          <div>HI: <span id="highScoreEl">0</span></div>
+        </div>
+
+        <!-- Canvas -->
+        <div class="canvas-area">
+          <canvas id="gameCanvas" width="320" height="178"></canvas>
+
+          <div id="startOverlay" class="lcd-overlay">
+            <h2>SNAKE II</h2>
+            <p>Pass-Through Walls 🌀</p>
+            <p style="font-size: 0.65rem; font-weight: normal; margin-bottom: 0.75rem;">
+              Catch flashing Golden Stars for 10s of Invincibility!
+            </p>
+            <button id="playBtn" class="btn-nokia">[ PRESS START ]</button>
+          </div>
+
+          <div id="gameOverOverlay" class="lcd-overlay hidden">
+            <h2>GAME OVER</h2>
+            <p id="finalScoreEl">SCORE: 0</p>
+            <button id="retryBtn" class="btn-nokia">[ PLAY AGAIN ]</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Keypad Controls (Classic 2, 4, 6, 8 Nokia snake keys) -->
+    <div class="controls-row">
+      <div class="options">
+        <label for="speedSelect">SPD:</label>
+        <select id="speedSelect">
+          <option value="115">1 (Slow)</option>
+          <option value="85" selected>2 (Norm)</option>
+          <option value="60">3 (Fast)</option>
+          <option value="42">4 (Max)</option>
+        </select>
+        <button id="pauseBtn" class="btn-phone">Pause</button>
+      </div>
+
+      <div class="keypad">
+        <button class="key-btn" data-dir="left">
+          <span class="key-num">4</span>
+          <span class="key-arrow">◀</span>
+        </button>
+        <div class="keypad-col">
+          <button class="key-btn" data-dir="up">
+            <span class="key-num">2</span>
+            <span class="key-arrow">▲</span>
+          </button>
+          <button class="key-btn" data-dir="down">
+            <span class="key-arrow">▼</span>
+            <span class="key-num">8</span>
+          </button>
+        </div>
+        <button class="key-btn" data-dir="right">
+          <span class="key-num">6</span>
+          <span class="key-arrow">▶</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="footer-help">
+      Use Keys 2, 4, 6, 8 or Arrow Keys / WASD. Spacebar pauses.
+    </div>
+
+  </div>
+
+  <script>
+    // PWA Service Worker Registration & WebAPK Install Prompt
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js').catch(err => {
+          console.log('SW registration error:', err);
+        });
+      });
+    }
+
+    let deferredPrompt;
+    const installBtn = document.getElementById('installBtn');
+
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+      installBtn.style.display = 'inline-block';
+    });
+
+    installBtn.addEventListener('click', async () => {
+      if (deferredPrompt) {
+        deferredPrompt.prompt();
+        const { outcome } = await deferredPrompt.userChoice;
+        if (outcome === 'accepted') {
+          installBtn.style.display = 'none';
+        }
+        deferredPrompt = null;
+      }
+    });
+
+    window.addEventListener('appinstalled', () => {
+      installBtn.style.display = 'none';
+    });
+
+    // Authentic Nokia Buzzer Chiptune Synthesizer
+    const AudioEngine = {
+      ctx: null,
+      muted: false,
+      init() {
+        if (this.muted) return;
+        try {
+          if (!this.ctx) {
+            const AudioContext = window.AudioContext || window.webkitAudioContext;
+            if (AudioContext) this.ctx = new AudioContext();
+          }
+          if (this.ctx && this.ctx.state === 'suspended') {
+            this.ctx.resume().catch(() => {});
+          }
+        } catch(e) {
+          this.muted = true;
+        }
+      },
+      beep(freq, duration, type = 'square', vol = 0.08) {
+        if (this.muted) return;
+        try {
+          this.init();
+          if (!this.ctx || this.ctx.state !== 'running') return;
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = type;
+          osc.frequency.setValueAtTime(freq, this.ctx.currentTime);
+          gain.gain.setValueAtTime(vol, this.ctx.currentTime);
+          gain.gain.setValueAtTime(0, this.ctx.currentTime + duration - 0.005);
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start();
+          osc.stop(this.ctx.currentTime + duration);
+        } catch(e) {}
+      },
+      playEatBug() {
+        this.beep(988, 0.04, 'square', 0.09);
+      },
+      playEatSpecial() {
+        if (this.muted) return;
+        const notes = [659, 587, 370, 415, 554, 494, 659, 880];
+        notes.forEach((freq, i) => {
+          setTimeout(() => this.beep(freq, 0.06, 'square', 0.1), i * 55);
+        });
+      },
+      playWarp() {
+        this.beep(523, 0.03, 'square', 0.05);
+        setTimeout(() => this.beep(659, 0.03, 'square', 0.05), 35);
+      },
+      playGameOver() {
+        const notes = [440, 370, 311, 220];
+        notes.forEach((freq, i) => {
+          setTimeout(() => this.beep(freq, 0.1, 'sawtooth', 0.12), i * 85);
+        });
+      }
+    };
+
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+    const COLS = 26;
+    const ROWS = 15;
+    const CELL_SIZE = 12;
+    const OFFSET_X = 4;
+    const OFFSET_Y = -1;
+
+    let snake = [];
+    let dir = { x: 1, y: 0 };
+    let nextDir = { x: 1, y: 0 };
+    let food = { x: 0, y: 0 };
+    let specialFood = null;
+    let specialFoodTimer = 0;
+    let isInvincible = false;
+    let invincibilityRemaining = 0;
+    let particles = [];
+    let score = 0;
+    let highScore = 0;
+    try {
+      highScore = parseInt(localStorage.getItem('nokia_snake_highscore') || '0', 10);
+      if (isNaN(highScore)) highScore = 0;
+    } catch(e) {}
+
+    let gameState = 'ready';
+    let lastTickTime = 0;
+    let lastTime = 0;
+    let tickInterval = 85;
+    let tongueTimer = 0;
+
+    const scoreEl = document.getElementById('scoreEl');
+    const highScoreEl = document.getElementById('highScoreEl');
+    const finalScoreEl = document.getElementById('finalScoreEl');
+    const startOverlay = document.getElementById('startOverlay');
+    const gameOverOverlay = document.getElementById('gameOverOverlay');
+    const pauseBtn = document.getElementById('pauseBtn');
+    const playBtn = document.getElementById('playBtn');
+    const retryBtn = document.getElementById('retryBtn');
+    const soundBtn = document.getElementById('soundBtn');
+    const speedSelect = document.getElementById('speedSelect');
+    const lcdScreen = document.getElementById('lcdScreen');
+    const invincibleStatus = document.getElementById('invincibleStatus');
+    const invTimerEl = document.getElementById('invTimerEl');
+
+    highScoreEl.textContent = highScore;
+
+    function resetGame() {
+      snake = [
+        { x: 8, y: 7 },
+        { x: 7, y: 7 },
+        { x: 6, y: 7 },
+        { x: 5, y: 7 }
+      ];
+      dir = { x: 1, y: 0 };
+      nextDir = { x: 1, y: 0 };
+      score = 0;
+      scoreEl.textContent = '0';
+      particles = [];
+      specialFood = null;
+      specialFoodTimer = Math.random() * 10 + 12;
+      isInvincible = false;
+      invincibilityRemaining = 0;
+      invincibleStatus.classList.add('hidden');
+      lastTickTime = 0;
+      spawnFood();
+      tickInterval = parseInt(speedSelect.value, 10) || 85;
+    }
+
+    function spawnFood() {
+      let valid = false;
+      let newX = 14, newY = 7;
+      let attempts = 0;
+      while (!valid && attempts < 150) {
+        newX = Math.floor(Math.random() * COLS);
+        newY = Math.floor(Math.random() * ROWS);
+        valid = !snake.some(seg => seg.x === newX && seg.y === newY);
+        if (specialFood && specialFood.x === newX && specialFood.y === newY) valid = false;
+        attempts++;
+      }
+      food = { x: newX, y: newY, anim: 0 };
+    }
+
+    function spawnSpecialFood() {
+      let valid = false;
+      let newX = 12, newY = 7;
+      let attempts = 0;
+      while (!valid && attempts < 150) {
+        newX = Math.floor(Math.random() * COLS);
+        newY = Math.floor(Math.random() * ROWS);
+        valid = !snake.some(seg => seg.x === newX && seg.y === newY);
+        if (food && food.x === newX && food.y === newY) valid = false;
+        attempts++;
+      }
+      specialFood = {
+        x: newX,
+        y: newY,
+        timeLeft: 9.0,
+        maxTime: 9.0,
+        wing: 0
+      };
+    }
+
+    function addPixelDust(x, y, count = 6) {
+      for (let i = 0; i < count; i++) {
+        const angle = Math.random() * Math.PI * 2;
+        const speed = Math.random() * 2 + 0.5;
+        particles.push({
+          x: OFFSET_X + x * CELL_SIZE + CELL_SIZE / 2,
+          y: OFFSET_Y + y * CELL_SIZE + CELL_SIZE / 2,
+          vx: Math.cos(angle) * speed,
+          vy: Math.sin(angle) * speed,
+          life: 18,
+          maxLife: 18
+        });
+      }
+    }
+
+    function step() {
+      dir = nextDir;
+      let newHead = { x: snake[0].x + dir.x, y: snake[0].y + dir.y };
+
+      // Screen wrapping
+      let wrapped = false;
+      if (newHead.x < 0) {
+        newHead.x = COLS - 1;
+        wrapped = true;
+      } else if (newHead.x >= COLS) {
+        newHead.x = 0;
+        wrapped = true;
+      }
+
+      if (newHead.y < 0) {
+        newHead.y = ROWS - 1;
+        wrapped = true;
+      } else if (newHead.y >= ROWS) {
+        newHead.y = 0;
+        wrapped = true;
+      }
+
+      if (wrapped) {
+        AudioEngine.playWarp();
+        addPixelDust(newHead.x, newHead.y, 4);
+      }
+
+      if (!isInvincible && snake.some(segment => segment.x === newHead.x && segment.y === newHead.y)) {
+        gameOver();
+        return;
+      }
+
+      snake.unshift(newHead);
+
+      if (newHead.x === food.x && newHead.y === food.y) {
+        score += 10;
+        scoreEl.textContent = score;
+        if (score > highScore) {
+          highScore = score;
+          highScoreEl.textContent = highScore;
+          try { localStorage.setItem('nokia_snake_highscore', highScore.toString()); } catch(e) {}
+        }
+        AudioEngine.playEatBug();
+        addPixelDust(food.x, food.y, 8);
+        spawnFood();
+      } 
+      else if (specialFood && newHead.x === specialFood.x && newHead.y === specialFood.y) {
+        score += 50;
+        scoreEl.textContent = score;
+        if (score > highScore) {
+          highScore = score;
+          highScoreEl.textContent = highScore;
+          try { localStorage.setItem('nokia_snake_highscore', highScore.toString()); } catch(e) {}
+        }
+        isInvincible = true;
+        invincibilityRemaining = 10.0;
+        invincibleStatus.classList.remove('hidden');
+        invTimerEl.textContent = '10.0';
+
+        AudioEngine.playEatSpecial();
+        addPixelDust(specialFood.x, specialFood.y, 16);
+        specialFood = null;
+        specialFoodTimer = Math.random() * 15 + 20;
+      } else {
+        snake.pop();
+      }
+    }
+
+    function gameOver() {
+      gameState = 'gameover';
+      AudioEngine.playGameOver();
+      finalScoreEl.textContent = `SCORE: ${score}`;
+      gameOverOverlay.classList.remove('hidden');
+    }
+
+    function setDirection(dx, dy) {
+      if (gameState === 'ready' || gameState === 'gameover') {
+        startGame();
+        nextDir = { x: dx, y: dy };
+        return;
+      }
+      if (gameState !== 'running') return;
+      if (dx !== 0 && dir.x === -dx) return;
+      if (dy !== 0 && dir.y === -dy) return;
+      nextDir = { x: dx, y: dy };
+    }
+
+    function togglePause() {
+      if (gameState === 'ready' || gameState === 'gameover') {
+        startGame();
+        return;
+      }
+      if (gameState === 'running') {
+        gameState = 'paused';
+        pauseBtn.textContent = 'Resume';
+      } else if (gameState === 'paused') {
+        gameState = 'running';
+        lastTickTime = 0;
+        pauseBtn.textContent = 'Pause';
+      }
+    }
+
+    function startGame() {
+      window.focus();
+      AudioEngine.init();
+      resetGame();
+      gameState = 'running';
+      startOverlay.classList.add('hidden');
+      gameOverOverlay.classList.add('hidden');
+      pauseBtn.textContent = 'Pause';
+    }
+
+    playBtn.addEventListener('click', (e) => { e.stopPropagation(); startGame(); });
+    retryBtn.addEventListener('click', (e) => { e.stopPropagation(); startGame(); });
+    pauseBtn.addEventListener('click', (e) => { e.stopPropagation(); togglePause(); });
+
+    lcdScreen.addEventListener('click', () => {
+      window.focus();
+      if (gameState === 'ready' || gameState === 'gameover') startGame();
+    });
+
+    document.body.addEventListener('click', () => window.focus());
+
+    window.addEventListener('keydown', (e) => {
+      window.focus();
+      if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', ' ', 'Enter', '2', '4', '6', '8'].includes(e.key)) {
+        e.preventDefault();
+      }
+
+      if (e.key === ' ' || e.code === 'Space' || e.key === 'Enter') {
+        if (gameState === 'ready' || gameState === 'gameover') startGame();
+        else togglePause();
+        return;
+      }
+
+      switch (e.key) {
+        case 'ArrowUp':
+        case 'w':
+        case 'W':
+        case '2':
+          setDirection(0, -1);
+          break;
+        case 'ArrowDown':
+        case 's':
+        case 'S':
+        case '8':
+          setDirection(0, 1);
+          break;
+        case 'ArrowLeft':
+        case 'a':
+        case 'A':
+        case '4':
+          setDirection(-1, 0);
+          break;
+        case 'ArrowRight':
+        case 'd':
+        case 'D':
+        case '6':
+          setDirection(1, 0);
+          break;
+      }
+    });
+
+    document.querySelectorAll('.key-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        window.focus();
+        const d = btn.getAttribute('data-dir');
+        if (d === 'up') setDirection(0, -1);
+        if (d === 'down') setDirection(0, 1);
+        if (d === 'left') setDirection(-1, 0);
+        if (d === 'right') setDirection(1, 0);
+      });
+    });
+
+    soundBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      AudioEngine.muted = !AudioEngine.muted;
+      soundBtn.textContent = AudioEngine.muted ? '🔇 Muted' : '🔊 Sound';
+    });
+
+    speedSelect.addEventListener('change', () => {
+      tickInterval = parseInt(speedSelect.value, 10) || 85;
+    });
+
+    const PIXEL_BLACK = '#142012';
+    const LCD_BG = '#97a878';
+
+    function drawBug(gx, gy, anim) {
+      const cx = OFFSET_X + gx * CELL_SIZE + CELL_SIZE / 2;
+      const cy = OFFSET_Y + gy * CELL_SIZE + CELL_SIZE / 2;
+
+      ctx.fillStyle = PIXEL_BLACK;
+      ctx.fillRect(cx - 3, cy - 3, 6, 6);
+      ctx.fillRect(cx - 2, cy - 5, 4, 2);
+      ctx.fillRect(cx - 4, cy - 6, 2, 2);
+      ctx.fillRect(cx + 2, cy - 6, 2, 2);
+      const legOffset = (Math.floor(anim * 8) % 2 === 0) ? 1 : 0;
+      ctx.fillRect(cx - 5, cy - 2 + legOffset, 2, 2);
+      ctx.fillRect(cx + 3, cy - 2 - legOffset, 2, 2);
+      ctx.fillRect(cx - 5, cy + 1 - legOffset, 2, 2);
+      ctx.fillRect(cx + 3, cy + 1 + legOffset, 2, 2);
+    }
+
+    function drawSpecialFood(sf, timestamp) {
+      const cx = OFFSET_X + sf.x * CELL_SIZE + CELL_SIZE / 2;
+      const cy = OFFSET_Y + sf.y * CELL_SIZE + CELL_SIZE / 2;
+
+      const blink = (Math.floor(timestamp / 90) % 2 === 0);
+      if (!blink && sf.timeLeft < 3.0) return;
+
+      ctx.fillStyle = PIXEL_BLACK;
+      ctx.fillRect(cx - 4, cy - 4, 8, 8);
+      ctx.fillRect(cx - 6, cy - 2, 12, 4);
+      ctx.fillRect(cx - 2, cy - 6, 4, 12);
+
+      const wingUp = (Math.floor(timestamp / 120) % 2 === 0);
+      if (wingUp) {
+        ctx.fillRect(cx - 6, cy - 6, 3, 3);
+        ctx.fillRect(cx + 3, cy - 6, 3, 3);
+      } else {
+        ctx.fillRect(cx - 6, cy + 3, 3, 3);
+        ctx.fillRect(cx + 3, cy + 3, 3, 3);
+      }
+
+      ctx.fillStyle = LCD_BG;
+      ctx.fillRect(cx - 1, cy - 1, 2, 2);
+
+      ctx.fillStyle = PIXEL_BLACK;
+      const barW = Math.max(0, Math.floor((sf.timeLeft / sf.maxTime) * 12));
+      ctx.fillRect(cx - 6, cy + 7, barW, 2);
+    }
+
+    function drawSnake(timestamp) {
+      if (snake.length === 0) return;
+
+      const isFlashing = isInvincible && (Math.floor(timestamp / 70) % 2 === 0);
+
+      ctx.fillStyle = PIXEL_BLACK;
+      ctx.strokeStyle = PIXEL_BLACK;
+
+      for (let i = 0; i < snake.length; i++) {
+        const seg = snake[i];
+        const nextSeg = snake[i + 1];
+
+        const cx = OFFSET_X + seg.x * CELL_SIZE + CELL_SIZE / 2;
+        const cy = OFFSET_Y + seg.y * CELL_SIZE + CELL_SIZE / 2;
+
+        let radius = (CELL_SIZE / 2) - 1;
+        if (i > snake.length - 4) {
+          const tailProgress = (snake.length - 1 - i) / 3;
+          radius = Math.max(2, radius * (0.4 + tailProgress * 0.6));
+        }
+
+        ctx.save();
+        if (isFlashing) {
+          ctx.strokeStyle = PIXEL_BLACK;
+          ctx.lineWidth = 2;
+          ctx.beginPath();
+          ctx.arc(cx, cy, radius, 0, Math.PI * 2);
+          ctx.stroke();
+        } else {
+          ctx.beginPath();
+          ctx.arc(cx, cy, radius, 0, Math.PI * 2);
+          ctx.fill();
+        }
+
+        if (nextSeg) {
+          const dx = nextSeg.x - seg.x;
+          const dy = nextSeg.y - seg.y;
+          if (Math.abs(dx) <= 1 && Math.abs(dy) <= 1) {
+            const nextCx = OFFSET_X + nextSeg.x * CELL_SIZE + CELL_SIZE / 2;
+            const nextCy = OFFSET_Y + nextSeg.y * CELL_SIZE + CELL_SIZE / 2;
+            ctx.lineWidth = radius * 1.85;
+            ctx.lineCap = 'round';
+            ctx.beginPath();
+            ctx.moveTo(cx, cy);
+            ctx.lineTo(nextCx, nextCy);
+            ctx.stroke();
+          }
+        }
+        ctx.restore();
+      }
+
+      const head = snake[0];
+      const hx = OFFSET_X + head.x * CELL_SIZE + CELL_SIZE / 2;
+      const hy = OFFSET_Y + head.y * CELL_SIZE + CELL_SIZE / 2;
+      const headRadius = (CELL_SIZE / 2) + 0.5;
+
+      ctx.save();
+      ctx.translate(hx, hy);
+
+      let angle = 0;
+      if (dir.x === 1) angle = 0;
+      else if (dir.x === -1) angle = Math.PI;
+      else if (dir.y === 1) angle = Math.PI / 2;
+      else if (dir.y === -1) angle = -Math.PI / 2;
+      ctx.rotate(angle);
+
+      ctx.fillStyle = isFlashing ? LCD_BG : PIXEL_BLACK;
+      ctx.strokeStyle = PIXEL_BLACK;
+      ctx.lineWidth = 1.5;
+
+      ctx.beginPath();
+      ctx.ellipse(1, 0, headRadius + 1, headRadius - 0.5, 0, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.stroke();
+
+      const eyeX = 2;
+      const eyeY = 3.2;
+      const eyeRadius = 1.8;
+
+      ctx.fillStyle = LCD_BG;
+      ctx.beginPath();
+      ctx.arc(eyeX, -eyeY, eyeRadius, 0, Math.PI * 2);
+      ctx.arc(eyeX, eyeY, eyeRadius, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.fillStyle = PIXEL_BLACK;
+      ctx.beginPath();
+      ctx.arc(eyeX + 0.8, -eyeY, 0.9, 0, Math.PI * 2);
+      ctx.arc(eyeX + 0.8, eyeY, 0.9, 0, Math.PI * 2);
+      ctx.fill();
+
+      tongueTimer += 0.04;
+      const isTongueOut = (Math.sin(tongueTimer) > 0.65);
+      if (isTongueOut) {
+        ctx.strokeStyle = PIXEL_BLACK;
+        ctx.lineWidth = 1.2;
+        ctx.beginPath();
+        ctx.moveTo(headRadius + 0.5, 0);
+        ctx.lineTo(headRadius + 5, 0);
+        ctx.lineTo(headRadius + 7.5, -2);
+        ctx.moveTo(headRadius + 5, 0);
+        ctx.lineTo(headRadius + 7.5, 2);
+        ctx.stroke();
+      }
+
+      ctx.restore();
+    }
+
+    function draw(timestamp) {
+      ctx.fillStyle = LCD_BG;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      ctx.fillStyle = 'rgba(20, 32, 18, 0.05)';
+      for (let x = 0; x < canvas.width; x += 3) {
+        ctx.fillRect(x, 0, 1, canvas.height);
+      }
+      for (let y = 0; y < canvas.height; y += 3) {
+        ctx.fillRect(0, y, canvas.width, 1);
+      }
+
+      ctx.strokeStyle = 'rgba(20, 32, 18, 0.35)';
+      ctx.lineWidth = 1;
+      ctx.setLineDash([3, 3]);
+      ctx.strokeRect(OFFSET_X, OFFSET_Y + 1, COLS * CELL_SIZE, ROWS * CELL_SIZE);
+      ctx.setLineDash([]);
+
+      if (food) {
+        drawBug(food.x, food.y, timestamp / 1000);
+      }
+
+      if (specialFood) {
+        drawSpecialFood(specialFood, timestamp);
+      }
+
+      drawSnake(timestamp);
+
+      for (let i = particles.length - 1; i >= 0; i--) {
+        const p = particles[i];
+        p.x += p.vx;
+        p.y += p.vy;
+        p.life--;
+        if (p.life <= 0) {
+          particles.splice(i, 1);
+          continue;
+        }
+        ctx.fillStyle = PIXEL_BLACK;
+        ctx.fillRect(Math.floor(p.x), Math.floor(p.y), 2, 2);
+      }
+    }
+
+    function loop(timestamp) {
+      try {
+        if (!lastTime) lastTime = timestamp;
+        const dt = (timestamp - lastTime) / 1000;
+        lastTime = timestamp;
+
+        if (gameState === 'running') {
+          if (isInvincible) {
+            invincibilityRemaining -= dt;
+            if (invincibilityRemaining <= 0) {
+              isInvincible = false;
+              invincibilityRemaining = 0;
+              invincibleStatus.classList.add('hidden');
+            } else {
+              invTimerEl.textContent = invincibilityRemaining.toFixed(1);
+            }
+          }
+
+          if (specialFood) {
+            specialFood.timeLeft -= dt;
+            if (specialFood.timeLeft <= 0) {
+              specialFood = null;
+              specialFoodTimer = Math.random() * 15 + 20;
+            }
+          } else {
+            specialFoodTimer -= dt;
+            if (specialFoodTimer <= 0) {
+              spawnSpecialFood();
+            }
+          }
+
+          if (!lastTickTime) lastTickTime = timestamp;
+          if (timestamp - lastTickTime >= tickInterval) {
+            step();
+            lastTickTime = timestamp;
+          }
+        }
+
+        draw(timestamp);
+      } catch(e) {
+        console.error("Game Loop Error:", e);
+      }
+      requestAnimationFrame(loop);
+    }
+
+    resetGame();
+    requestAnimationFrame(loop);
+  </script>
+</body>
+</html>
